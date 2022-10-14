@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
 
     lab_2_fig_bayes_3_classes = plt.figure(figsize=(10, 10))
-    plt.title("Min-Max for unequal B 3 classes")
+    plt.title("Bayes for unequal B 3 classes")
     plt.xlim(-5, 5)
     plt.ylim(-5, 5)
     plt.plot(vector_3[0], vector_3[1], 'r+')

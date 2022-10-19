@@ -198,9 +198,9 @@ def min_max_decider(X_vector, Ml, Mj, Bl, Bj):
     return Bayes_decider(X_vector, Ml, Mj, Bl, Bj, 0.5, 0.5)
 
 
-def calculate_experimental_probability(p, N):
+def calculate_experimental_probability(p, size_of_selection_N):
     if p != 0.0:
-        return np.sqrt((1 - p) / (N * p))
+        return np.sqrt((1 - p) / (size_of_selection_N * p))
     else:
         return 1
 

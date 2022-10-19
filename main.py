@@ -32,7 +32,7 @@ PROBABILITY_CLASS_P = 0.5
 PROBABILITY_CLASS_B = 0.5
 
 if __name__ == '__main__':
-    """
+
     A = lab_1_functions.calculate_matrix_A(B1)
     vector_1 = lab_1_functions.generate_vector_X(A, M1, NUMBER_OF_VECTOR_DIMENSIONS, SAMPLE_SIZE_N)
     vector_2 = lab_1_functions.generate_vector_X(A, M2, NUMBER_OF_VECTOR_DIMENSIONS, SAMPLE_SIZE_N)
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     plt.plot(vector_4[0], vector_4[1], 'g+')
     plt.plot(vector_5[0], vector_5[1], 'b+')
     show()
-    """
+
     """
     B_vector_1 = get_B_correlation_matrix_for_vector(vector_1)
     B_vector_2 = get_B_correlation_matrix_for_vector(vector_2)
@@ -98,8 +98,16 @@ if __name__ == '__main__':
     print()
     print("Correlation B3: \n", B3)
     print("Correlation B vector_5: \n", np.around(B_vector_5, 4))
+     lab 3 code fragment =======================================================================================
+    print("Относительная погрешность для класса П:", class_p_relative_error)
+    print("Относительная погрешность классификации для класса Б:", class_b_relative_error)
+
+    print("Общая относительная погрешность: ", lab_3_functions.calculate_common_relative_error(0.5, 0.5,
+                                                                                               class_p_relative_error,
+                                                                                               class_b_relative_error))
+    
     """
-    """
+
 
     # Lab 2 main code started
     print("LAB 2 OUTPUT \n")
@@ -168,14 +176,8 @@ if __name__ == '__main__':
                                                                     PROBABILITY_HALF_OF_ONE, PROBABILITY_HALF_OF_ONE)
     print("Size of selection is:", size_of_selection)
     print("E experimental is:", E_exp)
-    lab 3 code fragment =======================================================================================
-    print("Относительная погрешность для класса П:", class_p_relative_error)
-    print("Относительная погрешность классификации для класса Б:", class_b_relative_error)
 
-    print("Общая относительная погрешность: ", lab_3_functions.calculate_common_relative_error(0.5, 0.5,
-                                                                                               class_p_relative_error,
-                                                                                               class_b_relative_error))
-"""
+
     print("Lab 3 OUTPUT")
     PROBABILITY_CLASS_P = 0.5
     PROBABILITY_CLASS_B = 0.5

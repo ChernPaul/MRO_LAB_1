@@ -83,8 +83,8 @@ def calculate_w_lj_coefficients_array(array_of_condition_probabilities_omega_l,
     result = np.zeros(shape)
     for i in range(0, shape[0], 1):
         result[i] = math.log(
-            (array_of_condition_probabilities_omega_l[i] / (1 - array_of_condition_probabilities_omega_l[i]) *
-             (1 - array_of_condition_probabilities_omega_j[i]) / array_of_condition_probabilities_omega_j[i])
+            ((array_of_condition_probabilities_omega_l[i] / (1 - array_of_condition_probabilities_omega_l[i])) *
+             ((1 - array_of_condition_probabilities_omega_j[i]) / array_of_condition_probabilities_omega_j[i]))
         )
     return result
 
@@ -176,16 +176,12 @@ def calculate_binary_m(array_of_condition_probabilities_omega_0, array_of_condit
     size = array_of_condition_probabilities_omega_0.size
     result_m0 = np.zeros(size)
     result_m1 = np.zeros(size)
+    wlj_array = calculate_w_lj_coefficients_array(array_of_condition_probabilities_omega_1,
+                                                  array_of_condition_probabilities_omega_0)
     for i in range(0, size, 1):
-        result_m0[i] = math.log(
-            array_of_condition_probabilities_omega_1[i] / (1 - array_of_condition_probabilities_omega_1[i]) *
-            (1 - array_of_condition_probabilities_omega_0[i]) / array_of_condition_probabilities_omega_0[i]
-        ) * array_of_condition_probabilities_omega_0[i]
+        result_m0[i] = wlj_array[i] * array_of_condition_probabilities_omega_0[i]
 
-        result_m1[i] = math.log(
-            array_of_condition_probabilities_omega_1[i] / (1 - array_of_condition_probabilities_omega_1[i]) *
-            (1 - array_of_condition_probabilities_omega_0[i]) / array_of_condition_probabilities_omega_0[i]
-        ) * array_of_condition_probabilities_omega_1[i]
+        result_m1[i] = wlj_array[i] * array_of_condition_probabilities_omega_1[i]
 
     return np.sum(result_m0), np.sum(result_m1)
 
@@ -195,9 +191,8 @@ def calculate_binary_SD(array_of_condition_probabilities_omega_0, array_of_condi
     result_0 = np.zeros(size)
     result_1 = np.zeros(size)
     for i in range(0, size, 1):
-        log_part = math.log(
-            array_of_condition_probabilities_omega_1[i] / (1 - array_of_condition_probabilities_omega_1[i]) *
-            (1 - array_of_condition_probabilities_omega_0[i]) / array_of_condition_probabilities_omega_0[i])
+        log_part = calculate_w_lj_coefficients_array(array_of_condition_probabilities_omega_1,
+                                                     array_of_condition_probabilities_omega_0)[i]
         result_0[i] = np.power(log_part, 2) * array_of_condition_probabilities_omega_0[i] * (1 - array_of_condition_probabilities_omega_0[i])
         result_1[i] = np.power(log_part, 2) * array_of_condition_probabilities_omega_1[i] * (1 - array_of_condition_probabilities_omega_1[i])
 
@@ -206,7 +201,8 @@ def calculate_binary_SD(array_of_condition_probabilities_omega_0, array_of_condi
 
 def calculate_theoretical_errors(P_omega_0, P_omega_1, array_of_condition_probabilities_omega_0,
                                  array_of_condition_probabilities_omega_1):
-    lambda_tilda = math.log(P_omega_0 / P_omega_1)
+    lambda_tilda = calculate_lambda_tilda(P_omega_0, P_omega_1, array_of_condition_probabilities_omega_0,
+                                          array_of_condition_probabilities_omega_1)
     m0, m1 = calculate_binary_m(array_of_condition_probabilities_omega_0, array_of_condition_probabilities_omega_1)
     standard_deviation_0, standard_deviation_1 = calculate_binary_SD(array_of_condition_probabilities_omega_0,
                                                                      array_of_condition_probabilities_omega_1)
@@ -221,7 +217,8 @@ def calculate_theoretical_upper_bounds(P_omega_0, P_omega_1, array_of_condition_
     m0, m1 = calculate_binary_m(array_of_condition_probabilities_omega_0, array_of_condition_probabilities_omega_1)
     standard_deviation_0, standard_deviation_1 = calculate_binary_SD(array_of_condition_probabilities_omega_0,
                                                                      array_of_condition_probabilities_omega_1)
-    lambda_tilda = math.log(P_omega_0 / P_omega_1)
+    lambda_tilda = calculate_lambda_tilda(P_omega_0, P_omega_1, array_of_condition_probabilities_omega_0,
+                                          array_of_condition_probabilities_omega_1)
     p0 = np.power(standard_deviation_0, 2) / np.power((m0 - lambda_tilda), 2)
     p1 = np.power(standard_deviation_1, 2) / np.power((m1 - lambda_tilda), 2)
     return p0, p1

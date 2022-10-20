@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage.io import show
-
+from scipy. stats import norm
 import lab_1_functions
 import lab_2_functions
 import lab_3_functions
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     
     """
 
-
+    """
     # Lab 2 main code started
     print("LAB 2 OUTPUT \n")
     lab_2_fig_bayes = plt.figure(figsize=(10, 10))
@@ -149,8 +149,8 @@ if __name__ == '__main__':
     plt.plot(vector_3[0], vector_3[1], 'r+')
     plt.plot(vector_4[0], vector_4[1], 'g+')
     plt.plot(vector_5[0], vector_5[1], 'b+')
-    border_3_4 = lab_2_functions.calculate_Bayes_border_data(M1, M2, B1, B2, PROBABILITY_ONE_OF_THREE, PROBABILITY_ONE_OF_THREE, -5, -0.7, 0.1)
-    border_3_5 = lab_2_functions.calculate_Bayes_border_data(M1, M3, B1, B3, PROBABILITY_ONE_OF_THREE, PROBABILITY_ONE_OF_THREE, -0.9, 5, 0.1)
+    border_3_4 = lab_2_functions.calculate_Bayes_border_data(M1, M2, B1, B2, PROBABILITY_ONE_OF_THREE, PROBABILITY_ONE_OF_THREE, -5, 5, 0.1)
+    border_3_5 = lab_2_functions.calculate_Bayes_border_data(M1, M3, B1, B3, PROBABILITY_ONE_OF_THREE, PROBABILITY_ONE_OF_THREE, -5, 5, 0.1)
     border_4_5 = lab_2_functions.calculate_Bayes_border_data(M2, M3, B2, B3, PROBABILITY_ONE_OF_THREE, PROBABILITY_ONE_OF_THREE, -0.9, 5, 0.1)
 
     plt.plot(border_3_4[0], border_3_4[2], '-y')
@@ -174,10 +174,13 @@ if __name__ == '__main__':
     E_exp = lab_2_functions.calculate_E_experimental(M1, M2, B1, B2, vector_test_data,
                                                                     size,
                                                                     PROBABILITY_HALF_OF_ONE, PROBABILITY_HALF_OF_ONE)
+
+
     print("Size of selection is:", size_of_selection)
     print("E experimental is:", E_exp)
 
 
+    """
     print("Lab 3 OUTPUT")
     PROBABILITY_CLASS_P = 0.5
     PROBABILITY_CLASS_B = 0.5
@@ -207,7 +210,7 @@ if __name__ == '__main__':
     test_data_class_b = lab_3_functions.generate_seed_data_for_classes(lab_3_functions.LETTER_2, 200, 0.3)
     cond_prob_array_class_p = lab_3_functions.calculate_array_of_condition_probabilities(test_data_class_p)
     cond_prob_array_class_b = lab_3_functions.calculate_array_of_condition_probabilities(test_data_class_b)
-
+    """
     lab_3_fig_cond_prob = plt.figure(figsize=(10, 10))
     plt.title("Conditional probability for class P - red and B - blue")
     plt.plot(np.arange(81), cond_prob_array_class_p, '-r')
@@ -221,6 +224,24 @@ if __name__ == '__main__':
     lab_3_fig_cond_prob_p = plt.figure(figsize=(10, 10))
     plt.title("Conditional probability for class B ")
     imshow(np.reshape(cond_prob_array_class_b, (9, 9)))
+    show()
+
+    """
+    sd0, sd1 = lab_3_functions.calculate_binary_SD(cond_prob_array_class_p, cond_prob_array_class_b)
+    m0, m1 = lab_3_functions.calculate_binary_m(cond_prob_array_class_p, cond_prob_array_class_b)
+    print("ME 0", m0)
+    print("ME 1", m1)
+    print("SD 0", sd0)
+    print("SD 1", sd1)
+    fig = plt.figure
+    plt.title("X0 blue and X1 red")
+    x0 = np.arange(-25, 25, 0.001)
+    plt.plot(x0, norm. pdf(x0, m0, sd1), color='blue', linewidth= 3 )
+
+    x1 = np.arange(-25, 25, 0.001)
+    plt.plot(x1, norm.pdf(x1, m1, sd1), color='red', linewidth= 3 )
+    print("lambda_tilda: ", lab_3_functions.calculate_lambda_tilda(PROBABILITY_HALF_OF_ONE, PROBABILITY_HALF_OF_ONE,
+                                                 cond_prob_array_class_p, cond_prob_array_class_b ))
     show()
 
 

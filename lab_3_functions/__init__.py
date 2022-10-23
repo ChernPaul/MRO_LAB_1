@@ -2,7 +2,7 @@ import math
 import numpy as np
 from skimage.io import show, imshow
 from matplotlib import pyplot as plt
-
+from scipy.special import erf
 import lab_2_functions
 
 VALUE_ONE = 1
@@ -66,14 +66,46 @@ def generate_seed_data_for_classes(class_seed, selection_size, p_probability_of_
     return result
 
 
+def get_probability(dataset):
+    ones_count = np.sum(dataset, axis=0)
+    return ones_count / dataset.shape[0]
+
+def get_threshold(
+    aprior_0: float, aprior_1: float, prob_0: float, prob_1: float
+) -> np.array:
+    return np.log(aprior_1 / aprior_0) + np.sum(np.log((1 - prob_1) / (1 - prob_0)))
+
+def phi_laplace(x) -> float:
+    return (1 + math.erf(x / np.sqrt(2))) / 2
+
+def get_errors(
+    aprior_0: float, aprior_1: float, prob_0: float, prob_1: float
+) -> list:
+    w_1_0 = np.log(prob_1 * (1 - prob_0) / ((1 - prob_1) * prob_0))
+
+    m_0 = np.sum(w_1_0 * prob_0)
+    m_1 = np.sum(w_1_0 * prob_1)
+
+    sigma_0 = np.sqrt(np.sum((w_1_0 ** 2) * prob_0 * (1 - prob_0)))
+    sigma_1 = np.sqrt(np.sum((w_1_0 ** 2) * prob_1 * (1 - prob_1)))
+
+    _lambda = -get_threshold(aprior_0, aprior_1, prob_0, prob_1)
+
+    errors = [1 - lab_2_functions.Phi((_lambda - m_0) / sigma_0),
+              lab_2_functions.Phi((_lambda - m_1) / sigma_1)]
+    upper_bounds = [sigma_0 ** 2 / ((m_0 - _lambda) ** 2),
+                    sigma_1 ** 2 / ((m_1 - _lambda) ** 2)]
+
+    return errors, m_0, m_1, sigma_0, sigma_1
+
 def calculate_array_of_condition_probabilities(array_of_vectors_seed_class):
     shape_of_array = np.shape(array_of_vectors_seed_class)
     shape_result_array = np.shape(array_of_vectors_seed_class[0])
     sum_of_vector_coordinates_values = np.zeros(shape_result_array)
-    for i in range(0, shape_of_array[1], 1):
+    for i in range(0, shape_of_array[0], 1):
         sum_of_vector_coordinates_values += array_of_vectors_seed_class[i]
 
-    return np.divide(sum_of_vector_coordinates_values, shape_of_array[1])
+    return np.divide(sum_of_vector_coordinates_values, shape_of_array[0])
 
 
 def calculate_w_lj_coefficients_array(array_of_condition_probabilities_omega_l,
@@ -95,8 +127,8 @@ def calculate_lambda_tilda(P_omega_l, P_omega_j, array_of_condition_probabilitie
     shape = np.shape(array_of_condition_probabilities_omega_l)
     pre_result = np.zeros(shape)
     for i in range(0, shape[0], 1):
-        pre_result[i] = math.log((1 - array_of_condition_probabilities_omega_j[i]) /
-                                 (1 - array_of_condition_probabilities_omega_l[i]))
+        pre_result[i] = math.log((1 - array_of_condition_probabilities_omega_l[i]) /
+                                 (1 - array_of_condition_probabilities_omega_j[i]))
 
     return math.log(P_omega_j / P_omega_l) + np.sum(pre_result)
 

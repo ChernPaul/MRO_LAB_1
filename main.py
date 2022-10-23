@@ -32,7 +32,7 @@ PROBABILITY_CLASS_P = 0.5
 PROBABILITY_CLASS_B = 0.5
 
 if __name__ == '__main__':
-
+    """
     A = lab_1_functions.calculate_matrix_A(B1)
     vector_1 = lab_1_functions.generate_vector_X(A, M1, NUMBER_OF_VECTOR_DIMENSIONS, SAMPLE_SIZE_N)
     vector_2 = lab_1_functions.generate_vector_X(A, M2, NUMBER_OF_VECTOR_DIMENSIONS, SAMPLE_SIZE_N)
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     plt.plot(vector_5[0], vector_5[1], 'b+')
     show()
 
-    """
+   
     B_vector_1 = get_B_correlation_matrix_for_vector(vector_1)
     B_vector_2 = get_B_correlation_matrix_for_vector(vector_2)
     B_vector_3 = get_B_correlation_matrix_for_vector(vector_3)
@@ -106,9 +106,9 @@ if __name__ == '__main__':
                                                                                                class_p_relative_error,
                                                                                                class_b_relative_error))
     
-    """
+   
 
-    """
+   
     # Lab 2 main code started
     print("LAB 2 OUTPUT \n")
     lab_2_fig_bayes = plt.figure(figsize=(10, 10))
@@ -208,25 +208,14 @@ if __name__ == '__main__':
 
     test_data_class_p = lab_3_functions.generate_seed_data_for_classes(lab_3_functions.LETTER_1, 200, 0.3)
     test_data_class_b = lab_3_functions.generate_seed_data_for_classes(lab_3_functions.LETTER_2, 200, 0.3)
+    # test_data_class_p = np.load("test_data_class_p.npy")
+    # test_data_class_b = np.load("test_data_class_b.npy")
     cond_prob_array_class_p = lab_3_functions.calculate_array_of_condition_probabilities(test_data_class_p)
     cond_prob_array_class_b = lab_3_functions.calculate_array_of_condition_probabilities(test_data_class_b)
-    """
-    lab_3_fig_cond_prob = plt.figure(figsize=(10, 10))
-    plt.title("Conditional probability for class P - red and B - blue")
-    plt.plot(np.arange(81), cond_prob_array_class_p, '-r')
-    plt.plot(np.arange(81), cond_prob_array_class_b, '-b')
-    show()
 
-    lab_3_fig_cond_prob_p = plt.figure(figsize=(10, 10))
-    plt.title("Conditional probability for class P ")
-    imshow(np.reshape(cond_prob_array_class_p, (9, 9)))
-    show()
-    lab_3_fig_cond_prob_p = plt.figure(figsize=(10, 10))
-    plt.title("Conditional probability for class B ")
-    imshow(np.reshape(cond_prob_array_class_b, (9, 9)))
-    show()
+    # np.save("test_data_class_p", test_data_class_p)
+    # np.save("test_data_class_b", test_data_class_b)
 
-    """
     sd0, sd1 = lab_3_functions.calculate_binary_SD(cond_prob_array_class_p, cond_prob_array_class_b)
     m0, m1 = lab_3_functions.calculate_binary_m(cond_prob_array_class_p, cond_prob_array_class_b)
     print("ME 0", m0)
@@ -240,22 +229,26 @@ if __name__ == '__main__':
 
     x1 = np.arange(-25, 25, 0.001)
     plt.plot(x1, norm.pdf(x1, m1, sd1), color='red', linewidth= 3 )
-    print("lambda_tilda: ", lab_3_functions.calculate_lambda_tilda(PROBABILITY_HALF_OF_ONE, PROBABILITY_HALF_OF_ONE,
-                                                 cond_prob_array_class_p, cond_prob_array_class_b ))
+    lambda_tilda = lab_3_functions.calculate_lambda_tilda(PROBABILITY_HALF_OF_ONE, PROBABILITY_HALF_OF_ONE,
+                                                 cond_prob_array_class_p, cond_prob_array_class_b)
+    array_lambda_tilda = np.zeros(4) + lambda_tilda
+    plt.plot(array_lambda_tilda, np.arange(0, 0.2, 0.05), color='black')
+    print("lambda_tilda: ", lambda_tilda)
     show()
 
 
     classified_array_class_p = lab_3_functions.classify_array_of_vectors(test_data_class_p, PROBABILITY_CLASS_P, PROBABILITY_CLASS_B,
                                                             cond_prob_array_class_p, cond_prob_array_class_b)
-    print(classified_array_class_p)
+    # print(classified_array_class_p)
     classified_array_class_b = lab_3_functions.classify_array_of_vectors(test_data_class_b, PROBABILITY_CLASS_B, PROBABILITY_CLASS_P,
                                                             cond_prob_array_class_b, cond_prob_array_class_p)
-    print(classified_array_class_b)
+    # print(classified_array_class_b)
 
-    lab_3_functions.show_vector_picture(test_data_class_p[197])
-    # lab_3_functions.show_all_vectors_pictures(test_data_class_p, res_class_p, "P")
+    # lab_3_functions.show_vector_picture(test_data_class_p[197])
+    # lab_3_functions.show_all_vectors_pictures(test_data_class_p, classified_array_class_p, "P")
     class_p_exp_error = lab_3_functions.calculate_exp_error(classified_array_class_p)
     class_b_exp_error = lab_3_functions.calculate_exp_error(classified_array_class_b)
+
     print("Экспериментальная ошибка классификации для класса П:", class_p_exp_error)
     print("Экспериментальная ошибка классификации для класса Б:", class_b_exp_error)
     class_p_relative_error = lab_3_functions.calculate_exp_relative_error(class_p_exp_error,
@@ -264,5 +257,6 @@ if __name__ == '__main__':
                                                                           classified_array_class_b.size)
     theoretical_error = lab_3_functions.calculate_theoretical_errors(0.5, 0.5, cond_prob_array_class_p,
                                                                cond_prob_array_class_b)
+
     print("Теоритическая ошибка классификации для класса П:", theoretical_error[0])
     print("Теоритическая ошибка классификации для класса Б:", theoretical_error[1])
